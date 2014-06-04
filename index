@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript">
+var ws;
+function WebSocketTest()
+{
+	var name=document.getElementById("name").value;
+  if ("WebSocket" in window)
+  {
+	  document.getElementById("rcvMsg").innerHTML+="<br>WebSocket is supported by your Browser!";
+     // Let us open a web socket
+     ws = new WebSocket("ws://192.168.7.106:8080/ProductRestPOC/test");
+      ws.onopen = function()
+     {
+        // Web Socket is connected, send data using send()
+        
+        ws.send(name);
+        document.getElementById("rcvMsg").innerHTML+="<br>Request is sent...";
+     };
+     ws.onmessage = function (evt) 
+     { 
+        var received_msg = evt.data;
+        document.getElementById("rcvMsg").innerHTML+="<br><b>"+received_msg+"</b>";
+     };
+     ws.onclose = function()
+     { 
+        // websocket is closed.
+        //ws.close();
+        document.getElementById("rcvMsg").innerHTML+="<br>Connection is closed..."; 
+     };
+  }
+  else{
+	  document.getElementById("rcvMsg").innerHTML+="<br>WebSocket NOT supported by your Browser!";
+  }
+}
+function stop(){
+ws.close();
+
+}
+window.onunload=function(){
+	ws.close();
+};
+
+</script>
+</head>
+<body>
+<div id="sse">
+<input type="text" Id="name"/> 
+   <a href="javascript:WebSocketTest()">Connect</a> &nbsp; <a href="javascript:stop()">Disconnect</a>
+</div>
+<div id ="rcvMsg">
+</div>
+</body>
+</html>
